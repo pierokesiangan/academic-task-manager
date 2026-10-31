@@ -44,7 +44,7 @@ export function AppNav() {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold tracking-tight text-foreground leading-none">
-                Ice & Butter
+                Besok Aja<span className="text-butter-300">.Task</span>
               </span>
               <span className="text-[10px] text-cobalt-400 font-medium">Academic Hub</span>
             </div>

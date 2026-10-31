@@ -1,4 +1,4 @@
-# Academic Task Manager — "Ice & Butter"
+# Besok Aja.Task — Academic Task Manager
 Aplikasi web manajemen perkuliahan dan tugas akademik mahasiswa berkecepatan tinggi dengan antarmuka bergaya **Linear** dan tema visual **"Ice & Butter"** (Deep Navy, Soft Cobalt, Ice Blue, Butter Yellow).
 
 Dibuat khusus untuk kebutuhan perkuliahan Semester 3 Allan: memantau silabus 16 pertemuan, hitung mundur deadline tugas mendesak (*panic prevention*), dan terhubung langsung ke **Google Calendar di ponsel**.

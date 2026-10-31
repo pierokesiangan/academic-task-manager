@@ -1,6 +1,6 @@
 {
-  "name": "Academic Task Manager — Ice & Butter",
-  "short_name": "Ice & Butter",
+  "name": "Besok Aja.Task — Academic Task Manager",
+  "short_name": "Besok Aja.Task",
   "description": "Aplikasi manajemen perkuliahan dan tugas akademik mahasiswa berkecepatan tinggi",
   "start_url": "/",
   "display": "standalone",

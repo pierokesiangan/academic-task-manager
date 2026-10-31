@@ -176,7 +176,7 @@ export default function UnlockPage() {
                 ? setupStep === "new"
                   ? "Atur Master PIN Baru"
                   : "Konfirmasi Master PIN"
-                : "Academic Task Manager"}
+                : "Besok Aja.Task"}
             </h1>
             <p className="text-xs text-muted mt-1">
               {isFirstSetup

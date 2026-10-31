@@ -4,13 +4,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppNav } from "@/components/layout/app-nav";
 
 export const metadata: Metadata = {
-  title: "Academic Task Manager — Ice & Butter",
+  title: "Besok Aja.Task — Academic Task Manager",
   description: "Aplikasi manajemen perkuliahan dan tugas akademik mahasiswa berkecepatan tinggi",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Ice & Butter",
+    title: "Besok Aja.Task",
   },
   icons: {
     icon: "/icons/icon.svg",
