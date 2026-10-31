@@ -1,23 +1,24 @@
 "use client";
 
 import { TaskDetailData } from "./task-drawer";
-import { Clock, Star, AlertCircle, CheckSquare, ArrowRight, ArrowLeft } from "lucide-react";
+import { Clock, Star, AlertCircle, CheckSquare, ArrowRight, ArrowLeft, Filter } from "lucide-react";
 import confetti from "canvas-confetti";
 import { toggleTaskStatusAction } from "@/actions/tasks";
 
 interface TaskKanbanViewProps {
   tasks: TaskDetailData[];
+  selectedStatus?: string;
   onSelectTask: (task: TaskDetailData) => void;
   onRefresh?: () => void;
 }
 
-const COLUMNS = [
+const ALL_COLUMNS = [
   { id: "TODO", title: "Belum Dikerjakan", color: "text-muted", border: "border-surface-border" },
   { id: "IN_PROGRESS", title: "Sedang Dikerjakan", color: "text-cobalt-400", border: "border-cobalt-500/30" },
   { id: "DONE", title: "Selesai", color: "text-emerald-400", border: "border-emerald-500/30" },
 ];
 
-export function TaskKanbanView({ tasks, onSelectTask, onRefresh }: TaskKanbanViewProps) {
+export function TaskKanbanView({ tasks, selectedStatus = "ALL", onSelectTask, onRefresh }: TaskKanbanViewProps) {
   const handleMoveStatus = async (
     e: React.MouseEvent,
     taskId: string,
@@ -36,9 +37,34 @@ export function TaskKanbanView({ tasks, onSelectTask, onRefresh }: TaskKanbanVie
     onRefresh?.();
   };
 
+  // Filter columns based on user's status filter dropdown
+  const visibleColumns = ALL_COLUMNS.filter((col) => {
+    if (selectedStatus === "ALL") return true;
+    if (selectedStatus === "OVERDUE") return col.id !== "DONE"; // Overdue only applies to TODO & IN_PROGRESS
+    return col.id === selectedStatus;
+  });
+
+  if (tasks.length === 0) {
+    return (
+      <div className="p-12 rounded-2xl bg-surface border border-surface-border text-center space-y-2">
+        <p className="text-sm font-semibold text-foreground">Tidak ada tugas ditemukan</p>
+        <p className="text-xs text-muted">
+          Coba ganti filter pencarian atau pilih &apos;Semua Status&apos; untuk melihat tugas lainnya.
+        </p>
+      </div>
+    );
+  }
+
+  const gridColsClass =
+    visibleColumns.length === 1
+      ? "max-w-2xl mx-auto grid grid-cols-1"
+      : visibleColumns.length === 2
+      ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+      : "grid grid-cols-1 md:grid-cols-3 gap-4";
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {COLUMNS.map((col) => {
+    <div className={gridColsClass}>
+      {visibleColumns.map((col) => {
         const columnTasks = tasks.filter((t) => t.status === col.id);
 
         return (
@@ -62,7 +88,7 @@ export function TaskKanbanView({ tasks, onSelectTask, onRefresh }: TaskKanbanVie
             <div className="space-y-2.5 flex-1">
               {columnTasks.length === 0 ? (
                 <div className="h-32 flex items-center justify-center text-xs text-muted/60 italic border border-dashed border-surface-border/60 rounded-xl">
-                  Tidak ada tugas
+                  Tidak ada tugas di kolom ini
                 </div>
               ) : (
                 columnTasks.map((task) => {

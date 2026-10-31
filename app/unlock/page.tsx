@@ -62,6 +62,11 @@ export default function UnlockPage() {
   }, [isFirstSetup, setupStep]);
 
   const submitUnlock = useCallback(async (pinToTest: string) => {
+    if (pinToTest.length < 4) {
+      setError("PIN minimal 4 digit");
+      triggerShake();
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -138,9 +143,9 @@ export default function UnlockPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyPress, handleDelete, handleClear, handleSetupNext, submitUnlock, isFirstSetup, pin]);
 
-  // Auto-submit saat PIN mencapai 4 digit jika mode normal unlock
+  // Auto-submit jika PIN mencapai 6 digit (panjang maksimal)
   useEffect(() => {
-    if (!isFirstSetup && pin.length === 4) {
+    if (!isFirstSetup && pin.length === 6) {
       submitUnlock(pin);
     }
   }, [pin, isFirstSetup, submitUnlock]);
@@ -176,16 +181,16 @@ export default function UnlockPage() {
             <p className="text-xs text-muted mt-1">
               {isFirstSetup
                 ? setupStep === "new"
-                  ? "Buat PIN 4 digit untuk mengamankan data perkuliahanmu"
+                  ? "Buat PIN 4-6 digit untuk mengamankan data perkuliahanmu"
                   : "Ketik ulang PIN yang sama untuk verifikasi"
-                : "Masukkan PIN 4 digit untuk membuka akses"}
+                : "Masukkan PIN (4-6 digit) lalu tekan Buka Kunci"}
             </p>
           </div>
         </div>
 
-        {/* PIN Dots Indicator */}
-        <div className="flex items-center justify-center gap-3 my-6">
-          {[0, 1, 2, 3].map((index) => {
+        {/* PIN Dots Indicator (Supports 4 to 6 digits) */}
+        <div className="flex items-center justify-center gap-2.5 my-6">
+          {[0, 1, 2, 3, 4, 5].map((index) => {
             const isFilled = currentDisplayPin.length > index;
             return (
               <div
@@ -210,7 +215,7 @@ export default function UnlockPage() {
               Memverifikasi...
             </span>
           ) : (
-            <span className="text-[11px] text-muted">PIN default awal: <strong className="text-butter-300 font-mono">1234</strong></span>
+            <span className="text-[11px] text-muted">PIN default: <strong className="text-butter-300 font-mono">1234</strong> (bisa 4-6 digit)</span>
           )}
         </div>
 
@@ -260,8 +265,18 @@ export default function UnlockPage() {
           </button>
         </div>
 
-        {/* Action Button for Setup Mode */}
-        {isFirstSetup && (
+        {/* Action Button: Buka Kunci (when entering 4-6 digits) */}
+        {!isFirstSetup ? (
+          <button
+            type="button"
+            onClick={() => submitUnlock(pin)}
+            disabled={loading || pin.length < 4}
+            className="w-full mt-4 h-12 rounded-xl bg-butter-300 hover:bg-butter-200 active:scale-[0.98] text-navy-950 font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span>Buka Kunci</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        ) : (
           <button
             type="button"
             onClick={handleSetupNext}
@@ -274,7 +289,7 @@ export default function UnlockPage() {
         )}
 
         {/* Footer info */}
-        <div className="mt-6 pt-4 border-t border-surface-border/50 text-center">
+        <div className="mt-5 pt-4 border-t border-surface-border/50 text-center">
           <p className="text-[11px] text-muted flex items-center justify-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-cobalt-400" />
             <span>Sesi aman terenkripsi 30 hari</span>

@@ -199,6 +199,7 @@ export default function TasksPage() {
       ) : (
         <TaskKanbanView
           tasks={filteredTasks}
+          selectedStatus={selectedStatus}
           onSelectTask={handleSelectTask}
           onRefresh={loadData}
         />
