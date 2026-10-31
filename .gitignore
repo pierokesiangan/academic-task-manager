@@ -14,6 +14,10 @@
 # production
 /build
 
+# local sqlite db
+*.db
+*.db-journal
+
 # misc
 .DS_Store
 *.pem
