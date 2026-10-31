@@ -1,0 +1,18 @@
+{
+  "name": "Academic Task Manager — Ice & Butter",
+  "short_name": "Ice & Butter",
+  "description": "Aplikasi manajemen perkuliahan dan tugas akademik mahasiswa berkecepatan tinggi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B131D",
+  "theme_color": "#0B131D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AppConfig {
+  id              String   @id @default("singleton")
+  pinHash         String?
+  calendarToken   String   @unique @default(uuid())
+  themePreference String   @default("dark")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Course {
+  id          String          @id @default(cuid())
+  name        String
+  code        String?
+  credits     Int             @default(3)
+  color       String          @default("#7DA7D9")
+  lecturer    String?
+  scheduleDay String?         // Misal: "Senin"
+  startTime   String?         // Misal: "08:00"
+  endTime     String?         // Misal: "10:30"
+  room        String?         // Misal: "Lab 3"
+  isArchived  Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  meetings    CourseMeeting[]
+  tasks       Task[]
+}
+
+model CourseMeeting {
+  id          String    @id @default(cuid())
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  weekNumber  Int       // 1 s.d. 16
+  title       String?   // Topik pertemuan
+  notes       String?   // Catatan singkat dosen
+  date        DateTime?
+  
+  tasks       Task[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([courseId, weekNumber])
+}
+
+model Task {
+  id           String          @id @default(cuid())
+  title        String
+  description  String?         // Mendukung Markdown
+  instructions String?
+  status       String          @default("TODO") // "TODO", "IN_PROGRESS", "DONE"
+  priority     String          @default("MEDIUM") // "LOW", "MEDIUM", "HIGH", "URGENT"
+  isImportant  Boolean         @default(false) // Toggle manual "Penting Sekali"
+  deadline     DateTime        // Wajib tanggal + jam (default 23:59)
+  
+  courseId     String
+  course       Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  meetingId    String?
+  meeting      CourseMeeting?  @relation(fields: [meetingId], references: [id], onDelete: SetNull)
+
+  checklists   TaskChecklist[]
+  links        TaskLink[]
+
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model TaskChecklist {
+  id          String   @id @default(cuid())
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title       String
+  isCompleted Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model TaskLink {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title     String   // Misal: "Draft Google Docs", "Modul Pertemuan"
+  url       String
+  createdAt DateTime @default(now())
+}
